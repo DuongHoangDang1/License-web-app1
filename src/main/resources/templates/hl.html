@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Scan QR HTML</title>
+    <style>
+        body { text-align: center; font-family: sans-serif; }
+        video { width: 320px; height: 240px; border: 1px solid #ccc; margin-top: 10px; }
+        canvas { display: none; }
+        #box {
+            position: relative;
+            display: inline-block;
+        }
+        #focus {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px; height: 200px;
+            border: 3px solid white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+<h1>scan qr html</h1>
+<div id="box">
+    <video id="camera" autoplay></video>
+    <div id="focus"></div>
+</div>
+<p><button id="stop">Stop Scanning</button></p>
+<p id="result"></p>
+
+<script>
+    const video = document.getElementById('camera');
+    const result = document.getElementById('result');
+    const stopBtn = document.getElementById('stop');
+    let stream, intervalId;
+
+    async function startScan() {
+        // Kiểm tra hỗ trợ BarcodeDetector
+        if (!('BarcodeDetector' in window)) {
+            result.textContent = "Trình duyệt không hỗ trợ BarcodeDetector API!";
+            return;
+        }
+
+        const detector = new BarcodeDetector({ formats: ['qr_code'] });
+
+        // Lấy camera
+        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        video.srcObject = stream;
+
+        // Quét liên tục
+        intervalId = setInterval(async () => {
+            try {
+                const barcodes = await detector.detect(video);
+                if (barcodes.length > 0) {
+                    result.textContent = 'QR Code: ' + barcodes[0].rawValue;
+                    stopScan();
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }, 500);
+    }
+
+    function stopScan() {
+        clearInterval(intervalId);
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+    }
+
+    stopBtn.onclick = stopScan;
+
+    startScan();
+</script>
+</body>
+</html>

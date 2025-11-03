@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>License</title>
+    <link rel="stylesheet" th:href="@{/css/vendors/feather/feather.css}">
+    <link rel="stylesheet" th:href="@{/css/vendors/ti-icons/css/themify-icons.css}">
+    <link rel="stylesheet" th:href="@{/css/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{/css/vertical-layout-light/style.css}">
+    <link rel="shortcut icon" th:href="@{/css/images/favicon.png}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+
+
+    <style>
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .bbb {
+            color: #fff;
+            background-color: #4b49ac;
+            border-color: #4b49ac;
+        }
+        .bbb:hover {background-color:rgb(75 73 172 / 80%);}
+    </style>
+
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .model {
+            display: none;
+        }
+
+        .model.active {
+            display: block;
+        }
+
+        .model1 {
+            display: none;
+        }
+
+        .model1.active {
+            display: block;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 100px auto;
+            background: #fff;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .amount-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+            justify-content: center;
+        }
+
+        .amount-option {
+            background: #f0f0f0;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .amount-option:hover {
+            background: #007bff;
+            color: #fff;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-bottom: 16px;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .note {
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+            margin-top: 10px;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .back-home {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            background-color: #6c757d;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .back-home:hover {
+            background-color: #5a6268;
+        }
+    </style>
+
+    <style>
+        /* Tổng thể */
+        body {
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background-color: #f4f5f8;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .box-main {
+            max-width: 1000px;
+            margin: auto;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 24px 32px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        /* Bố cục 2 cột */
+        .box-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 28px;
+        }
+
+        .box-side {
+            flex: 1 1 45%;
+        }
+
+        /* Ảnh */
+        .img-preview {
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        }
+
+        /* Đánh giá sao */
+        .star-bar i {
+            color: #f6c700;
+            margin-right: 3px;
+        }
+
+        /* Nút */
+        .action-link {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid transparent;
+            text-decoration: none;
+            text-align: center;
+            min-width: 150px;
+            font-weight: 500;
+        }
+
+        .link-blue {
+            border: 1px solid #0066ff;
+            color: #0066ff;
+            background-color: white;
+        }
+        .link-blue:hover {
+            background-color: #0066ff;
+            color: white;
+        }
+
+        .link-red {
+            background-color: #e63946;
+            border: 1px solid #e63946;
+            color: white;
+        }
+        .link-red:hover {
+            background-color: #b92d37;
+        }
+
+        /* Khung mô tả và đánh giá */
+        .block-section {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-top: 32px;
+            padding: 22px 26px;
+        }
+
+        .block-title {
+            margin-bottom: 16px;
+            font-size: 20px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .text-gray {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 865px) {
+            .box-layout {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+            <h3 class="navbar-brand brand-logo mr-5 mr-2">License</h3>
+<!--            <a class="navbar-brand brand-logo-mini" href="../../index.html"><img src="./css/images/logo-lock.svg" alt="logo"/></a>-->
+        </div>
+        <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+            <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                <span class="icon-menu"></span>
+            </button>
+            <ul class="navbar-nav mr-lg-2">
+                <li class="nav-item nav-search d-none d-lg-block">
+                    <div class="input-group">
+                        <div class="input-group-prepend hover-cursor" id="navbar-search-icon">
+                            <span class="input-group-text" id="search">
+                              <i class="icon-search"></i>
+                            </span>
+                        </div>
+                        <form th:action="@{/web/search}" method="get">
+                            <input type="hidden" name="sortField" value="name" />
+                            <input type="hidden" name="sortDir" value="asc" />
+                            <input type="text" name="keyword" class="form-control" id="navbar-search-input" placeholder="Tìm Kiếm sản phẩm" aria-label="search" aria-describedby="search">
+                        </form>
+                    </div>
+                </li>
+            </ul>
+            <ul class="navbar-nav navbar-nav-right">
+                <li class="nav-item dropdown">
+                    <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
+                        <i class="icon-bell mx-0"></i>
+                            <span class="count"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
+                        <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
+
+                        <a class="dropdown-item preview-item">
+                            <div class="preview-thumbnail">
+                                <div class="preview-icon bg-info">
+                                    <i class="ti-user mx-0"></i>
+                                </div>
+                            </div>
+                            <div class="preview-item-content">
+                                <h6 class="preview-subject font-weight-normal">New user registration</h6>
+                                <p class="font-weight-light small-text mb-0 text-muted">
+                                    2 days ago
+                                </p>
+                            </div>
+                        </a>
+
+                        <a class="dropdown-item preview-item">
+                            <div class="preview-thumbnail">
+                                <div class="preview-icon bg-info">
+                                    <i class="ti-user mx-0"></i>
+                                </div>
+                            </div>
+                            <div class="preview-item-content">
+                                <h6 class="preview-subject font-weight-normal">New user registration</h6>
+                                <p class="font-weight-light small-text mb-0 text-muted">
+                                    2 days ago
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                </li>
+
+
+
+
+                <li class="nav-item nav-profile dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                        <img src="data:image/png;base64,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" alt="profile"/>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+
+                        <div class="coins-badge"
+                             style="display:inline-flex;align-items:center;background-color:#ffffff;color:#F57F17;font-weight:600;border-radius:20px;padding:0px;font-size:15px;">
+                            <i class="ti-money"
+                               style="font-size:15px;margin-right:3px;color:#ff9800; position: relative; top: 2px; left: 49px;"></i>
+                            <span style="position: relative; top: 3px; left: 50px;"
+                                  th:text="${wallet != null ? #numbers.formatDecimal(wallet.getBalance(), 0, 'COMMA', 0, 'POINT') + ' ₫' : '0 ₫'}">
+                            </span>
+                        </div>
+
+
+                        <a class="dropdown-item">
+                            <i class="ti-user text-primary"></i>
+                            <div th:text="${user.getUsername()}" style="color: #0d3057"></div>
+                        </a>
+
+                        <a class="dropdown-item">
+                            <i class="ti-settings text-primary"></i>
+                            Settings
+                        </a>
+
+                        <span class="dropdown-item">
+                            <i class="ti-power-off text-primary"></i>
+                            <form th:action="@{/web/logout}" method="post" style="display:inline;">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                                <button type="submit" style="all: unset; cursor: pointer;">
+                                    Logout
+                                </button>
+                            </form>
+                        </span>
+
+                    </div>
+                </li>
+                <li class="nav-item nav-settings d-none d-lg-flex">
+                    <a class="nav-link" href="#">
+                        <i class="icon-ellipsis"></i>
+                    </a>
+                </li>
+            </ul>
+            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+                <span class="icon-menu"></span>
+            </button>
+        </div>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+
+
+        <!-- partial -->
+        <!-- partial:../../partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="./typography.html">
+                        <i class="icon-grid menu-icon"></i>
+                        <span class="menu-title">Trang chủ</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                        <i class="icon-layout menu-icon"></i>
+                        <span class="menu-title">Giao dịch</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="ui-basic">
+                        <ul class="nav flex-column sub-menu">
+<!--                            <li class="nav-item"> <a class="nav-link" th:href="@{/wallet/topupvnp}">Nạp tiền</a></li>-->
+                            <li class="nav-item"> <span style="cursor: pointer" class="nav-link napTien">Nạp tiền</span></li>
+                            <li class="nav-item"> <a class="nav-link" href="#">Rút tiền</a></li>
+                            <li class="nav-item"> <a class="nav-link" th:href="@{/web/wallet/history}">Lịch sử giao dịch</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
+                        <i class="icon-columns menu-icon"></i>
+                        <span class="menu-title">Đơn hàng</span>
+                        <i class="menu-arrow"></i>
+                    </a>
+                    <div class="collapse" id="form-elements">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link" th:href="@{/web/order/history}">lịch sử</a></li>
+                        </ul>
+                    </div>
+                </li>
+
+
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="icon-paper menu-icon"></i>
+                        <span class="menu-title">Phản hồi</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/web/licenses}">
+                        <i class="icon-paper menu-icon"></i>
+                        <span class="menu-title">Kích hoạt</span>
+                    </a>
+                </li>
+
+
+
+            </ul>
+        </nav>
+        <!-- partial -->
+        <div class="main-panel">
+
+            <div class="sort-bar" style="margin-bottom: 23px;">
+                <span class="sort-label">Sắp xếp theo</span>
+                <button class="sort-btn">Phổ Biến</button>
+                <button class="sort-btn active">Mới Nhất</button>
+                <button class="sort-btn">Bán Chạy</button>
+
+                <a class="sort-btn" th:href="@{/web/homepage/1(sortField='price', sortDir=${reverseSortDir})}">
+                    Giá
+                    <span th:text="${sortField == 'price' ? '(' + sortDir + ')' : ''}"></span>
+                </a>
+
+<!--                <div class="sort-dropdown">-->
+<!--                    <select>-->
+<!--                        <option selected disabled>Giá</option>-->
+<!--                        <option value="asc">Giá: Thấp đến Cao</option>-->
+<!--                        <option value="desc">Giá: Cao đến Thấp</option>-->
+<!--                    </select>-->
+<!--                </div>-->
+
+<!--                <div class="page-control">-->
+<!--                    <span class="page-index" th:text="${currentPage} + '/' + ${totalPages}"></span>-->
+<!--                    <a class="page-btn prev" th:if="${currentPage > 1}"-->
+<!--                       th:href="${baseUrl == 'homepage'} ?-->
+<!--                @{/homepage/{pageNo}(pageNo=${currentPage - 1}, sortField=${sortField}, sortDir=${sortDir})} :-->
+<!--                @{/search(pageNo=${currentPage - 1}, keyword=${keyword}, sortField=${sortField}, sortDir=${sortDir})}"><</a>-->
+<!--                    <a class="page-btn next" th:if="${currentPage < totalPages}"-->
+<!--                       th:href="${baseUrl == 'homepage'} ?-->
+<!--                @{/homepage/{pageNo}(pageNo=${currentPage + 1}, sortField=${sortField}, sortDir=${sortDir})} :-->
+<!--                @{/search(pageNo=${currentPage + 1}, keyword=${keyword}, sortField=${sortField}, sortDir=${sortDir})}">></a>-->
+<!--                </div>-->
+
+                <div class="page-control text-center">
+                    <span class="page-index" th:text="${currentPage} + ' / ' + ${totalPages}"></span>
+
+                    <!-- Nút Previous -->
+                    <a class="page-btn prev"
+                       th:if="${baseUrl == 'homepage'} and ${currentPage > 1}"
+                       th:href="@{/web/homepage/{pageNo}(pageNo=${currentPage - 1}, sortField=${sortField}, sortDir=${sortDir})}">
+                        &lt;
+                    </a>
+                    <a class="page-btn prev"
+                       th:if="${baseUrl == 'search'} and ${currentPage > 1}"
+                       th:href="@{/web/search(pageNo=${currentPage - 1}, keyword=${keyword}, sortField=${sortField}, sortDir=${sortDir})}">
+                        &lt;
+                    </a>
+
+                    <!-- Nút Next -->
+                    <a class="page-btn next"
+                       th:if="${baseUrl == 'homepage'} and ${currentPage < totalPages}"
+                       th:href="@{/web/homepage/{pageNo}(pageNo=${currentPage + 1}, sortField=${sortField}, sortDir=${sortDir})}">
+                        &gt;
+                    </a>
+                    <a class="page-btn next"
+                       th:if="${baseUrl == 'search'} and ${currentPage < totalPages}"
+                       th:href="@{/web/search(pageNo=${currentPage + 1}, keyword=${keyword}, sortField=${sortField}, sortDir=${sortDir})}">
+                        &gt;
+                    </a>
+                </div>
+
+
+            </div>
+
+            <div class="content-wrapper">
+                <div class="row">
+
+
+                    <div th:if="${products == null}">
+                        Không có sản phẩm!
+                    </div>
+
+
+                    <div th:each="p : ${products}" class="col-md-3 grid-margin stretch-card">
+                        <div class="card shadow-sm border-0 h-100 product-card" style="transition: transform 0.2s ease;">
+                            <div class="card-body d-flex flex-column p-3 text-center">
+
+                                <!-- Ảnh sản phẩm -->
+                                <div class="mb-3">
+                                    <!--                                    <img th:src="${p.imageUrl}"-->
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2n3VUYauwn3jOrzsHnk3Gmf-K6x37JHcSrA&s"
+                                         alt="Sản phẩm"
+                                         class="img-fluid"
+                                         style="max-height: 180px; width: 100%; object-fit: cover; border-radius: 10px;">
+                                </div>
+
+                                <!-- Tên sản phẩm -->
+                                <h5 th:text="${p.name}"
+                                    class="card-title mb-2 text-truncate flex-grow-0"
+                                    style="font-weight: 600; color: #333;"></h5>
+
+                                <!-- Giá -->
+                                <p th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"
+                                   class="fw-bold mb-3 flex-grow-0"
+                                   style="font-size: 1.1rem; color: #d32f2f;"></p>
+
+                                <!-- Nút hành động -->
+                                <a th:href="@{/web/product-detail/{id}(id=${p.id})}"
+                                   class="btn btn-success w-100 mt-auto bbb"
+                                   style="font-weight: 500; border-radius: 6px;">
+                                    Chi tiết
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="sort-bar">
+                    <div class="page-control">
+                        <span class="page-index">1/14</span>
+                        <button class="page-btn prev" disabled>&lt;</button>
+                        <button class="page-btn next">&gt;</button>
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            <footer class="footer">
+                <div class="d-sm-flex justify-content-center justify-content-sm-between">
+
+                    <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">License system<i class="ti-heart text-danger ml-1"></i></span>
+                </div>
+            </footer>
+            <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+    </div>
+
+    <!-- page-body-wrapper ends -->
+</div>
+
+
+<div class="model1" th:classappend="${openModal} ? ' active' : ''" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.3); z-index: 1002;" >
+    <div class="box-main" style="z-index: 1002; position: relative;
+    z-index: 1002;
+    top: 91px;">
+
+        <div class="box-layout">
+            <!-- Ảnh -->
+            <div class="box-side">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2n3VUYauwn3jOrzsHnk3Gmf-K6x37JHcSrA&s"
+                     alt="Product image" class="img-preview">
+            </div>
+
+            <!-- Thông tin -->
+            <div class="box-side" th:if="${product != null}">
+                <h2  th:text="${product.name}"></h2>
+
+                <div class="star-bar">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star"></i>
+                    <span class="text-gray">(0 đánh giá)</span>
+                </div>
+
+                <h3 style="color:#d62828; margin:16px 0;"
+                    th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + '₫'"></h3>
+
+                <p><strong>Thời hạn giấy phép:</strong>
+                    <span th:text="${product.licenseDurationDays + ' ngày'}"></span>
+                </p>
+
+                <div style="margin-top:20px;">
+                    <button class="action-link link-blue">Tải xuống</button>
+                    <a th:href="@{/web/order/checkout(productId=${product.id})}"
+                       class="action-link link-red">Mua ngay</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mô tả -->
+        <div class="block-section" th:if="${product != null}">
+            <h4 class="block-title">Mô tả chi tiết</h4>
+            <p class="text-gray" th:text="${product.description}">
+                Đây là mô tả chi tiết sản phẩm, trình bày trong khung đẹp mắt.
+            </p>
+        </div>
+
+        <!-- Đánh giá -->
+        <div class="block-section">
+            <h4 class="block-title">Đánh giá sản phẩm</h4>
+            <p class="text-gray"><em>Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá sản phẩm này!</em></p>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="model" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.3); z-index: 1002;" >
+    <div class="container" style="z-index: 1002;">
+        <h2>Nạp tiền vào ví</h2>
+
+        <form th:action="@{/web/wallet/topupvnp}" method="post">
+            <label for="amount">Nhập số tiền muốn nạp (VND)</label>
+            <input type="number" id="amount" name="amount" min="1000" placeholder="Ví dụ: 50000" required>
+
+            <div class="amount-options">
+                <div class="amount-option" onclick="setAmount(50000)">50.000đ</div>
+                <div class="amount-option" onclick="setAmount(100000)">100.000đ</div>
+                <div class="amount-option" onclick="setAmount(200000)">200.000đ</div>
+                <div class="amount-option" onclick="setAmount(500000)">500.000đ</div>
+            </div>
+
+            <button type="submit">Thanh toán qua VNPAY</button>
+
+            <p class="error" th:if="${param.error} == 'amount'">
+                Số tiền không hợp lệ!
+            </p>
+
+            <p class="note">
+                Sau khi thanh toán thành công, số tiền sẽ được cộng vào ví của bạn tự động.
+            </p>
+        </form>
+
+        <a href="web/home" class="back-home closeModal">Quay lại</a>
+    </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script>
+    const napTien = document.querySelector(".napTien");
+    const model = document.querySelector(".model");
+    const btnClose  = document.querySelector('.closeModal');
+        // Khi bấm nút nạp tiền → mở modal
+        napTien.addEventListener('click', () => {
+            model.classList.add('active');
+        });
+        // Khi bấm nút đóng → tắt modal
+        btnClose.addEventListener('click', () => {
+            model.classList.remove('active');
+        });
+        // Khi click ra ngoài modal → cũng tắt modal
+        window.addEventListener('click', (e) => {
+            if (e.target === model) {
+                model.classList.remove('active');
+            }
+    });
+
+
+    function setAmount(value) {
+        document.getElementById('amount').value = value;
+    }
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const modal = document.querySelector(".model1");
+        // const btnClose = document.querySelector(".closeModal1");
+
+        // if (btnClose) {
+        //     btnClose.addEventListener("click", () => {
+        //         modal.classList.remove("active");
+        //     });
+        // }
+
+        window.addEventListener("click", (e) => {
+            if (e.target === modal) modal.classList.remove("active");
+        });
+    });
+</script>
+
+
+
+<script th:if="${successMessage}">
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "timeOut": "5000",
+        "positionClass": "toast-bottom-right"
+    };
+    toastr.success('[[${successMessage}]]');
+</script>
+
+<!--<script th:if="${errorMessage}">-->
+<!--    toastr.options = {-->
+<!--        "closeButton": true,-->
+<!--        "progressBar": true,-->
+<!--        "timeOut": "5000",-->
+<!--        "positionClass": "toast-bottom-right"-->
+<!--    };-->
+<!--    toastr.error('[[${errorMessage}]]');-->
+<!--</script>-->
+
+
+<script th:src="@{/css/vendors/js/vendor.bundle.base.js}"></script>
+<script th:src="@{/js/off-canvas.js}"></script>
+<script th:src="@{/js/hoverable-collapse.js}"></script>
+<script th:src="@{/js/template.js}"></script>
+<script th:src="@{/js/settings.js}"></script>
+<script th:src="@{/js/todolist.js}"></script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${product.name} + ' | Chi tiết sản phẩm'"></title>
+    <style>
+        /* Tổng thể */
+        body {
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background-color: #f4f5f8;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .box-main {
+            max-width: 1000px;
+            margin: auto;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 24px 32px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        /* Bố cục 2 cột */
+        .box-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 28px;
+        }
+
+        .box-side {
+            flex: 1 1 45%;
+        }
+
+        /* Ảnh */
+        .img-preview {
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        }
+
+        /* Đánh giá sao */
+        .star-bar i {
+            color: #f6c700;
+            margin-right: 3px;
+        }
+
+        /* Nút */
+        .action-link {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid transparent;
+            text-decoration: none;
+            text-align: center;
+            min-width: 150px;
+            font-weight: 500;
+        }
+
+        .link-blue {
+            border: 1px solid #0066ff;
+            color: #0066ff;
+            background-color: white;
+        }
+        .link-blue:hover {
+            background-color: #0066ff;
+            color: white;
+        }
+
+        .link-red {
+            background-color: #e63946;
+            border: 1px solid #e63946;
+            color: white;
+        }
+        .link-red:hover {
+            background-color: #b92d37;
+        }
+
+        /* Khung mô tả và đánh giá */
+        .block-section {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-top: 32px;
+            padding: 22px 26px;
+        }
+
+        .block-title {
+            margin-bottom: 16px;
+            font-size: 20px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .text-gray {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 865px) {
+            .box-layout {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="box-main">
+
+    <div class="box-layout">
+        <!-- Ảnh -->
+        <div class="box-side">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2n3VUYauwn3jOrzsHnk3Gmf-K6x37JHcSrA&s"
+                 alt="Product image" class="img-preview">
+        </div>
+
+        <!-- Thông tin -->
+        <div class="box-side">
+            <h2 th:text="${product.name}"></h2>
+
+            <div class="star-bar">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star"></i>
+                <span class="text-gray">(0 đánh giá)</span>
+            </div>
+
+            <h3 style="color:#d62828; margin:16px 0;"
+                th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + '₫'"></h3>
+
+            <p><strong>Thời hạn giấy phép:</strong>
+                <span th:text="${product.licenseDurationDays + ' ngày'}"></span>
+            </p>
+
+            <div style="margin-top:20px;">
+                <button class="action-link link-blue">Tải xuống</button>
+                <a th:href="@{/web/order/checkout(productId=${product.id})}"
+                   class="action-link link-red">Mua ngay</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mô tả -->
+    <div class="block-section">
+        <h4 class="block-title">Mô tả chi tiết</h4>
+        <p class="text-gray" th:text="${product.description}">
+            Đây là mô tả chi tiết sản phẩm, trình bày trong khung đẹp mắt.
+        </p>
+    </div>
+
+    <!-- Đánh giá -->
+    <div class="block-section">
+        <h4 class="block-title">Đánh giá sản phẩm</h4>
+        <p class="text-gray"><em>Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá sản phẩm này!</em></p>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

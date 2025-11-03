@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang chủ - License Store</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header>
+    <h1>License Store</h1>
+</header>
+
+<!--<main>-->
+<!--    <h2>Danh sách sản phẩm</h2>-->
+<!--    <div class="product-list">-->
+<!--        <div th:each="product : ${products}" class="product-card">-->
+<!--            <img th:src="${product.imageUrl}" alt="Product Image" class="product-image"/>-->
+<!--            <h3 th:text="${product.name}">Tên sản phẩm</h3>-->
+<!--            <p th:text="${product.description}">Mô tả sản phẩm</p>-->
+<!--            <span th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</main>-->
+
+<a th:href="@{/web/products/new}">Thêm sản phẩm mới</a>
+
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Tên</th>
+        <th>Mô tả</th>
+        <th>Giá</th>
+        <th>Thời hạn (ngày)</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="p : ${products}">
+        <td th:text="${p.id}"></td>
+        <td th:text="${p.name}"></td>
+        <td th:text="${p.description}"></td>
+        <td th:text="${p.price}"></td>
+        <td th:text="${p.licenseDurationDays}"></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

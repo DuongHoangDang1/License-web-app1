@@ -1,0 +1,154 @@
+package com.example.demo.controller;
+
+import dto.hsf302.hsf302.he180446.duonghd.LicenseResponse;
+import dto.hsf302.hsf302.he180446.duonghd.VerifyLicenseRequest;
+import pojo.hsf302.hsf302.he180446.duonghd.License;
+import pojo.hsf302.hsf302.he180446.duonghd.Product;
+import repository.hsf302.hsf302.he180446.duonghd.LicenseRepository;
+import com.example.demo.utils.JwtLicenseUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/license")
+public class APIController {
+
+    @Autowired
+    private LicenseRepository licenseRepo;
+    @Autowired
+    private JwtLicenseUtil jwtLicenseUtil;
+
+//    @PostMapping("/activate")
+//    public ResponseEntity<?> activeLicense(@RequestBody VerifyLicenseRequest request) {
+//        License license = licenseRepo.findByLicenseKey(request.getLicenseKey())
+//                .orElseThrow(() -> new RuntimeException("License not found!"));
+//
+//
+//        String token = jwtLicenseUtil.generateAccessToken(
+//                license.getLicenseKey(),
+//                license.getProduct().getName()
+//        );
+//
+//        Instant expiresAt = jwtLicenseUtil.getExpiration(token);
+//
+////        String formatted = DateTimeFormatter
+////                .ofPattern("HH:mm:ss dd/MM/yyyy")
+////                .withZone(ZoneId.of("Asia/Ho_Chi_Minh"))
+////                .format(expiresAt);
+//
+//        LicenseResponse response = new LicenseResponse(token, expiresAt);
+////        return ResponseEntity.ok(Map.of("token", token));
+//        return ResponseEntity.ok(response);
+//    }
+
+
+
+//@PostMapping("/activate")
+//public ResponseEntity<?> activateLicense(@RequestBody VerifyLicenseRequest request) {
+//    // Tìm license theo key
+//    License license = licenseRepo.findByLicenseKey(request.getLicenseKey())
+//            .orElseThrow(() -> new RuntimeException("License not found!"));
+//
+//    // Kiểm tra hết hạn
+//    if (license.getExpiredAt() != null && license.getExpiredAt().isBefore(Instant.now())) {
+//        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                .body(Map.of("status", "error", "message", "License expired"));
+//    }
+//
+//    // Kiểm tra AppId
+//    String requestAppId = request.getAppId();
+//
+//    if (license.getAppId() == null || license.getAppId().isBlank()) {
+//        // Kích hoạt lần đầu: lưu appId
+//        license.setAppId(requestAppId);
+//        licenseRepo.save(license);
+//    } else if (!license.getAppId().equals(requestAppId)) {
+//        // appId khác => không cho phép
+//        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+//                .body(Map.of("status", "error", "message", "License already used on another device"));
+//    }
+//
+//    // Sinh JWT token
+//    String token = jwtLicenseUtil.generateAccessToken(
+//            license.getLicenseKey(),
+//            license.getProduct().getName()
+//    );
+//    Instant expiresAt = jwtLicenseUtil.getExpiration(token);
+//
+//    // 5️Trả response
+//    LicenseResponse response = new LicenseResponse(token, expiresAt);
+//    return ResponseEntity.ok(response);
+//}
+
+
+
+
+@PostMapping("/activate")
+public ResponseEntity<?> activateLicense(@RequestBody VerifyLicenseRequest request) {
+    // Tìm license theo key
+    License license = licenseRepo.findByLicenseKey(request.getLicenseKey())
+            .orElseThrow(() -> new RuntimeException("License not found!"));
+
+    // Kiểm tra license hết hạn hay chưa
+    LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+    LocalDateTime expiryDate = license.getExpiryDate();
+
+    if (expiryDate != null && expiryDate.isBefore(now)) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of(
+                        "status", "error",
+                        "message", "License expired at " + license.getExpiryDate().toString()
+                ));
+    }
+
+    // Kiểm tra appId
+    String requestAppId = request.getAppId();
+    Product product = license.getProduct();
+
+    if (product.getId().toString().equals(requestAppId)) {
+        // Kích hoạt lần đầu
+        license.setStatus("ACTIVE");
+        license.setIssueDate(now); // lưu thời điểm kích hoạt
+        license.setExpiryDate(now.plusDays(product.getLicenseDurationDays()));
+        licenseRepo.save(license);
+    } else {
+        // appId khác => từ chối
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(Map.of(
+                        "status", "error",
+                        "message", "License already used on another device"
+                ));
+    }
+
+    // Sinh JWT token chứa cả appId (nếu muốn)
+    String token = jwtLicenseUtil.generateAccessToken(
+            license.getLicenseKey(),
+            license.getProduct().getName(),
+            license.getExpiryDate(),
+            requestAppId
+    );
+
+    // Trả response
+    LicenseResponse response = new LicenseResponse(
+            token,
+            license.getExpiryDate().atZone(ZoneId.systemDefault()).toInstant()
+    );
+
+    return ResponseEntity.ok(response);
+}
+
+
+
+
+
+    @GetMapping("/verify")
+    public ResponseEntity<?> verifyLicense() {
+        return ResponseEntity.ok("License hợp lệ");
+    }
+}

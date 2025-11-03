@@ -1,0 +1,124 @@
+package com.example.demo.utils;
+
+import pojo.hsf302.hsf302.he180446.duonghd.License;
+import repository.hsf302.hsf302.he180446.duonghd.LicenseRepository;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
+@Component
+public class JwtLicenseUtil {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtLicenseUtil.class);
+    private static final long EXPIRE_DURATION = 24 * 60 * 60 * 1000; // 24 hour
+    private static final String SECRET_KEY = "my-super-secret-license-key-should-be-at-least-64-characters-long-!!!!!";
+
+    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+
+    public String generateAccessToken(String licenseKey, String productName, LocalDateTime expiryDate, String appId) {
+        Date expiration = Date.from(
+                expiryDate.atZone(ZoneId.systemDefault()).toInstant()
+        );
+
+        return Jwts.builder()
+                .setSubject(licenseKey)
+                .claim("appId", appId)
+                .setIssuer("License-web-app")
+                .setIssuedAt(new Date())
+//                .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_DURATION))
+                .setExpiration(expiration)
+                .signWith(SignatureAlgorithm.HS512, key)
+                .compact();
+    }
+
+    @Autowired
+    private LicenseRepository licenseRepo;
+
+    public Jws<Claims> validateLicenseToken(String token) {
+
+        try {
+            // Giải mã và kiểm tra chữ ký JWT
+            Jws<Claims> claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+
+            String appId = claims.getBody().get("appId", String.class);
+            String licenseKey = claims.getBody().getSubject();
+
+            License license = licenseRepo.findByLicenseKey(licenseKey)
+                    .orElseThrow(() -> new RuntimeException("License not found in DB"));
+
+            if (!license.getProduct().getId().equals(appId)) {
+                throw new RuntimeException("License invalid: appId mismatch");
+            }
+
+            if(!license.getStatus().equals("ACTIVE")) {
+                throw new RuntimeException("License invalid: appId mismatch");
+            }
+
+            return claims;
+
+        } catch (JwtException e) {
+            // Token sai signature, hết hạn hoặc không hợp lệ
+            throw new RuntimeException("Invalid or expired token: " + e.getMessage());
+        }
+
+//        return Jwts.parserBuilder()
+//                .setSigningKey(key)
+//                .build()
+//                .parseClaimsJws(token);
+    }
+
+    public Instant getExpiration(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(key)
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getExpiration().toInstant();
+    }
+
+
+//    public boolean validateAccessToken(String token) {
+//        try {
+//            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+//            return true;
+//        } catch (ExpiredJwtException ex) {
+//            LOGGER.error("JWT expired", ex.getMessage());
+//        } catch (IllegalArgumentException ex) {
+//            LOGGER.error("Token is null, empty or only whitespace", ex.getMessage());
+//        } catch (MalformedJwtException ex) {
+//            LOGGER.error("JWT is invalid", ex);
+//        } catch (UnsupportedJwtException ex) {
+//            LOGGER.error("JWT is not supported", ex);
+//        } catch (SignatureException ex) {
+//            LOGGER.error("Signature validation failed");
+//        }
+//
+//        return false;
+//    }
+//
+//    public String getSubject(String token) {
+//        return parseClaims(token).getSubject();
+//    }
+//
+//    private Claims parseClaims(String token) {
+//        return Jwts.parser()
+//                .setSigningKey(SECRET_KEY)
+//                .parseClaimsJws(token)
+//                .getBody();
+//    }
+
+
+}

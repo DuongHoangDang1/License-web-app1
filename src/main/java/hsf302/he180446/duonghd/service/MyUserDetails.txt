@@ -1,0 +1,43 @@
+package com.example.demo.service;
+
+import pojo.hsf302.hsf302.he180446.duonghd.User;
+import repository.hsf302.hsf302.he180446.duonghd.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class MyUserDetails implements UserDetailsService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> user = userRepository.findByUsername(username);
+        if (user.isPresent()) {
+            var userObj = user.get();
+            if (!userObj.isVerified()) { // hoặc userObj.getIsVerified() == 0 nếu bạn dùng int
+                throw new UsernameNotFoundException("Tài khoản chưa được kích hoạt. Vui lòng kiểm tra email để xác minh.");
+            }
+
+            // if is list<>;
+//            String[] roles = user.get.stream()
+//                    .map(Role::getName)
+//                    .toArray(String[]::new);
+            String role = userObj.getRole();
+
+            return org.springframework.security.core.userdetails.User.builder()
+                    .username(userObj.getUsername())
+                    .password(userObj.getPassword())
+                    .roles(role)
+                    .build();
+        } else {
+            throw new UsernameNotFoundException("Username not found");
+        }
+    }
+}
